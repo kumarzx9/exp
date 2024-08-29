@@ -27,61 +27,29 @@ class MultipartTruckVM {
         
     }
     
-    // MARK: almofire golf app single video upload
-    func singleVideoUpload(parameters: [String: Any], videoURL: URL, videoParamName: String, completion: @escaping (_ result: VideoUploadModal?, _ error: Error?) -> ()) {
-
-        let token = ApiEndpoints.token
-        let headers: HTTPHeaders = ["Authorization": "Bearer \(token ?? "")"]
+     // MARK: media Upload Url session // image or video with optional image array
+    func mediaUpload(parms: [String: Any],
+                     singleMedia: [String: MediaType],
+                     multipleImages: [String: [UIImage]],
+                     complition: @escaping (Result<MultipartTruckModal, Error>) -> Void) {
         
-        APIServices.shared.alamofire_uploadVideo(url: "https://golf-aligner.netscapelabs.com/api/user/video-upload", method: .post, parameters: parameters, videoURL: videoURL, videoParamName: videoParamName, headers: headers) { data, error in
-            
-            if let error = error {
-                // Handle error scenario
-                self.vidUploadData = nil
-                completion(nil, error)
-            } else if let data = data {
-                // Decode the raw data into the VideoUploadModal
-                do {
-                    let decodedResult = try JSONDecoder().decode(VideoUploadModal.self, from: data)
-                    self.vidUploadData = decodedResult
-                    completion(decodedResult, nil)
-                } catch {
-                    // Handle decoding error
-                    print("Decoding error: \(error.localizedDescription)")
-                    self.vidUploadData = nil
-                    completion(nil, error)
-                }
+        APIServices.shared.request(
+            methodType: MethodType.post,
+            param: parms,
+            singleMedia: singleMedia,
+            multipleImages: multipleImages,
+            dataResponse: MultipartTruckModal.self,
+            url: ApiEndpoints.createTruck,
+            token: ApiEndpoints.token ?? ""
+        ) { response in
+            switch response {
+            case .success(let data):
+                complition(.success(data))
+            case .failure(let error):
+                complition(.failure(error))
             }
         }
     }
-
-    
-    // MARK: url session single img/video upload eg. here golf, eg. babblebot phase 2
-    func imgVidUpload(parameters: [String: Any], uploadDataType: String, imgVidData: Data, imgVidParamName: String, completion: @escaping (_ result: VideoUploadModal?, _ error: Error?) -> ()) {
-
-        let headers: [String: String] = ["Authorization": "Bearer \(ApiEndpoints.token ?? "")"]
-        APIServices.shared.urlSessionUploadVideo(url: "https://golf-aligner.netscapelabs.com/api/user/video-upload", uploadDataType: uploadDataType, method: "POST", parameters: parameters, imgVidData: imgVidData, imgVidParamName: imgVidParamName, headers: headers) { data, response, error in
-                
-                if let error = error {
-                    completion(nil, error)
-                    return
-                }
-
-                guard let data = data else {
-                    completion(nil, NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "No data received"]))
-                    return
-                }
-
-                do {
-                    let decoder = JSONDecoder()
-                    let result = try decoder.decode(VideoUploadModal.self, from: data)
-                    completion(result, nil)
-                } catch let parsingError {
-                    completion(nil, parsingError)
-                }
-            }
-        }
-
     
     
  
