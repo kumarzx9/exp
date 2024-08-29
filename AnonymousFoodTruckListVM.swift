@@ -22,17 +22,18 @@ final class AnonymousFoodTruckListVM {
     }
     
     
-    // MARK: method 4 url session with common method of get or post
-    func fetchData4(parms: [String: Any], complition: @escaping (Result<AnonnymousTruckListModal, Error>) -> Void) {
-        LoadingManager.shared.showLoading()
-        let token = ApiEndpoints.token ?? ""
-        APIServices.shared.request(methodType: MethodType.post.rawValue, param: parms, dataResponse: AnonnymousTruckListModal.self, url: ApiEndpoints.truckListAnonnymous, token: "Bearer \(token)") {response in
-            LoadingManager.shared.hideLoading()
-            switch response{
-            case .success(let user):
-                complition(.success(user))
-            case.failure(let erroor):
-                complition(.failure(erroor))
+ // MARK: url session post/get
+    func fetchRequest(parm: [String: Any], complition: @escaping (Result<AnonnymousTruckListModal, Error>) -> Void) {
+        APIServices.shared.request(methodType: MethodType.post,
+                                   param: parm,
+                                   dataResponse: AnonnymousTruckListModal.self,
+                                   url: ApiEndpoints.truckListAnonnymous,
+                                   token: ApiEndpoints.token ?? "") { response in
+            switch response {
+            case .success(let data):
+                complition(.success(data))
+            case .failure(let error):
+                complition(.failure(error))
             }
         }
     }
