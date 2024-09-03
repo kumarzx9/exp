@@ -114,7 +114,7 @@ class APIServices {
                 body.append(convertFileData(fieldName: key, fileName: fileName ?? key, mimeType: "image/jpeg", fileData: imageData, boundary: boundary))
             }
         case .video(let videoData, let fileName):
-            body.append(convertFileData(fieldName: key, fileName: fileName, mimeType: "video/mp4", fileData: videoData, boundary: boundary))
+            body.append(convertFileData(fieldName: key, fileName: fileName ?? key, mimeType: "video/mp4", fileData: videoData, boundary: boundary))
         case .none:
             print("")
         }
@@ -141,7 +141,7 @@ struct MethodType {
 enum MediaType {
     case none
     case image(UIImage, String? = nil)  // UIImage and filename
-    case video(Data, String)     // Video data and filename
+    case video(Data, String? = nil)     // Video data and filename
 }
 
 
@@ -153,5 +153,4 @@ extension NSMutableData {
         }
     }
 }
-
 
