@@ -43,10 +43,5 @@ private extension ApiVc {
             }
         }
     }
-    
-    // MARK: alamofire single video upload golf
-    func singleVideoUpload() {
-
-    }
 
 }
