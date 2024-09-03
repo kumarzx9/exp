@@ -7,9 +7,6 @@ import Alamofire
 class MultipartTruckVM {
     
     var multipartTruckData: MultipartTruckModal?
-    var vidUploadData: VideoUploadModal?
-    
-    // MARK: almofire chorwtux create or edit truck
     
      // MARK: media Upload Url session // image or video with optional image array
     func mediaUpload(parms: [String: Any],
