@@ -43,5 +43,21 @@ private extension ApiVc {
             }
         }
     }
-
+    
+    // MARK: url Session single video upload golf
+    func singleVideoUpload() {
+        
+        let videoURL = Bundle.main.url(forResource: "samplevid", withExtension: "mov")
+        guard let imgVidData = try? Data(contentsOf: videoURL!) else {return}
+        
+        multipartTruckVM.videoUpload(singleMedia: ["video": .video(imgVidData)]) { response in
+            switch response {
+            case .success(let data):
+                print(data)
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
 }
